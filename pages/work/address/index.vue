@@ -16,7 +16,7 @@
 						</view>
 						<view class="info-item" v-if="item.phone">
 							<text class="label">电话:</text>
-							<text class="value">{{item.phone}}岁</text>
+							<text class="value">{{item.phone}}</text>
 						</view>
 						<view class="info-item" v-if="item.address">
 							<text class="label">地址:</text>

@@ -363,8 +363,8 @@
 
 	.pet-image {
 		margin: 10px 0;
-		width: 150px;
-		height: 150px;
+		width: 90px;
+		height: 90px;
 		object-fit: cover;
 		border-radius: 50%;
 	}
