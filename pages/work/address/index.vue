@@ -8,7 +8,7 @@
 		<!-- 列表 -->
 		<view class="item-list" v-if="itemList.length > 0">
 			<view class="item" v-for="item in itemList" :key="item.id">
-				<view class="item-content">
+				<view class="item-content" @click="showMap(item)">
 					<view class="item-info">
 						<view class=" info-item">
 							<text class="label">姓名:</text>
@@ -31,7 +31,11 @@
 							<text class="value">{{item.description}}</text>
 						</view>
 					</view>
+					<!-- <view class="item-actions" v-if="item.longitude && item.latitude" >
+					    <button class="action-btn" size="mini" type="primary" @click="showMap(item)">查看地图</button>
+				    </view> -->
 				</view>
+
 			</view>
 		</view>
 
@@ -44,6 +48,24 @@
 		<!-- 分页 -->
 		<uni-pagination :total="total" :current="pagination.current" :pageSize="pagination.pageSize"
 			@change="handlePageChange" showIcon />
+
+		<!-- 地图弹窗 -->
+		<uni-popup ref="mapPopup" type="dialog">
+			<view class="map-popup">
+				<view class="map-header">
+					<text class="map-title">位置信息</text>
+					<uni-icons type="close" size="20" @click="$refs.mapPopup.close()"></uni-icons>
+				</view>
+				<view class="map-content">
+					<view class="address-info">
+						<text class="address-text">{{currentAddress.address}} {{currentAddress.addressNo}}</text>
+					</view>
+					<map class="map" :latitude="currentAddress.latitude || 39.909"
+						:longitude="currentAddress.longitude || 116.397" :markers="markers" scale="16"
+						show-location></map>
+				</view>
+			</view>
+		</uni-popup>
 
 	</view>
 
@@ -64,6 +86,13 @@
 					current: 1,
 					pageSize: 10
 				},
+				currentAddress: {
+					address: '',
+					addressNo: '',
+					latitude: 39.909, // 默认纬度（北京）
+					longitude: 116.397 // 默认经度（北京）
+				},
+				markers: [],
 			}
 		},
 		// 添加onLoad生命周期钩子
@@ -109,6 +138,44 @@
 				this.pagination.current = e.current
 				this.loadAddress()
 			},
+
+			showMap(item) {
+				if (item.latitude && item.longitude) {
+					let latitude = 39.909
+					let longitude = 116.397
+
+					let cleaned = item.latitude.trim().replace(/[^\d.-]/g, "");
+					let value = parseFloat(cleaned);
+					if (!isNaN(value)) {
+						latitude = value
+					}
+					
+					cleaned = item.longitude.trim().replace(/[^\d.-]/g, "");
+					value = parseFloat(cleaned);
+					if (!isNaN(value)) {
+						longitude = value
+					}
+
+					this.currentAddress = {
+						...item,
+						latitude: latitude,
+						longitude: longitude,
+					}
+					// 设置地图标记点
+					this.markers = [{
+						id: item.id,
+						latitude: this.currentAddress.latitude,
+						longitude: this.currentAddress.longitude,
+						title: this.currentAddress.address,
+						iconPath: '/static/images/marker.png',
+						width: 30,
+						height: 30
+					}]
+
+					// 打开地图弹窗
+					this.$refs.mapPopup.open()
+				}
+			}
 		},
 	}
 </script>
@@ -281,5 +348,54 @@
 
 	.detail-btn {
 		min-width: 160rpx;
+	}
+
+	.item-actions {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+
+	.action-btn {
+		margin: 10rpx 0;
+	}
+
+	/* 地图弹窗样式 */
+	.map-popup {
+		background-color: #fff;
+		border-radius: 12rpx;
+		width: 650rpx;
+	}
+
+	.map-header {
+		padding: 20rpx;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		border-bottom: 1px solid #eee;
+	}
+
+	.map-title {
+		font-size: 32rpx;
+		font-weight: bold;
+	}
+
+	.map-content {
+		padding: 20rpx;
+	}
+
+	.address-info {
+		margin-bottom: 20rpx;
+	}
+
+	.address-text {
+		font-size: 28rpx;
+		color: #333;
+	}
+
+	.map {
+		width: 100%;
+		height: 500rpx;
+		border-radius: 8rpx;
 	}
 </style>

@@ -10,7 +10,7 @@
 		<!-- 订单列表 -->
 		<view class="order-list" v-if="orderList.length > 0">
 			<view class="order-item" v-for="item in orderList" :key="item.id">
-				<view class="order-header">
+				<view class="order-header"  @click="showDetail(item)">
 					<text class="order-no">订单号: {{item.orderNo}}</text>
 					<text class="value price">{{item.statusText}}</text>
 				</view>
@@ -63,10 +63,10 @@
 							<text class="label">创建时间:</text>
 							<text class="value">{{item.orderedTime}}</text>
 						</view>
-						<!-- <view class="info-item">
-							<text class="label">订单状态:</text>
-							<text class="value price">{{item.statusText}}</text>
-						</view> -->
+						<view class="info-item" v-if="item.description">
+							<text class="label">备注:</text>
+							<text class="value">{{item.description}}</text>
+						</view>
 
 					</view>
 					<view class="order-actions">
@@ -177,6 +177,11 @@
 						<text class="detail-label">地址:</text>
 						<text class="detail-value">{{currentOrder.address}}</text>
 					</view>
+					<view class="detail-item" v-if="currentOrder.description">
+						<text class="detail-label">备注:</text>
+						<text class="detail-value">{{currentOrder.description}}</text>
+					</view>
+					
 				</view>
 				<view class="detail-footer">
 					<!-- <button class="detail-btn" @click="$refs.detailPopup.close()">关闭</button> -->

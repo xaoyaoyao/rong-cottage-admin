@@ -37,6 +37,11 @@
             },
             "ios" : {},
             "sdkConfigs" : {}
+        },
+        "maps": {
+            "amap": {
+                "appkey": "d070b0531edde273c715723c00b60775"
+            }
         }
     },
     "quickapp" : {},
@@ -64,6 +69,15 @@
         "router" : {
             "mode" : "hash",
             "base" : "./"
+        },
+        "sdkConfigs": {
+            "maps": {
+                "amap": {
+                    "key": "d070b0531edde273c715723c00b60775",
+                    "securityJsCode": "7b99e3d56bafe0f9ff18f07e43d0e426",
+                    "serviceHost": ""
+                }
+            }
         }
     }
 }
